@@ -1,0 +1,124 @@
+{
+  "$schema": "https://keyfactor.github.io/integration-manifest-schema.json",
+  "integration_type": "orchestrator",
+  "name": "Akamai Cloud Certificate Manager (CCM)",
+  "status": "production",
+  "support_level": "community",
+  "release_dir": "akamai-ccm-orchestrator/bin/Release",
+  "release_project": "akamai-ccm-orchestrator/akamai-ccm-orchestrator.csproj",
+  "update_catalog": false,
+  "link_github": true,
+  "description": "The Akamai Cloud Certificate Manager (CCM) Orchestrator is capable of inventorying existing certificates on the Akamai CCM platform and performing enrollments of THIRD_PARTY certificates.",
+  "about": {
+    "orchestrator": {
+      "UOFramework": "12.3",
+      "pam_support": false,
+      "win": {
+        "supportsCreateStore": false,
+        "supportsDiscovery": false,
+        "supportsManagementAdd": true,
+        "supportsManagementRemove": false,
+        "supportsReenrollment": true,
+        "supportsInventory": true,
+        "platformSupport": "Unused"
+      },
+      "linux": {
+        "supportsCreateStore": false,
+        "supportsDiscovery": false,
+        "supportsManagementAdd": true,
+        "supportsManagementRemove": false,
+        "supportsReenrollment": true,
+        "supportsInventory": true,
+        "platformSupport": "Unused"
+      },
+      "store_types": [
+        {
+          "Name": "Akamai Cloud Certificate Manager",
+          "ShortName": "AkamaiCcm",
+          "Capability": "AkamaiCcm",
+          "LocalStore": false,
+          "SupportedOperations": {
+            "Add": true,
+            "Create": false,
+            "Discovery": false,
+            "Enrollment": true,
+            "Remove": false
+          },
+          "Properties": [
+            {
+              "Name": "host",
+              "DisplayName": "Akamai Host",
+              "Type": "String",
+              "DependsOn": "",
+              "DefaultValue": "",
+              "Required": true,
+              "IsPAMEligible": false,
+              "Description": "The Akamai API host (e.g., akab-xxxxx.luna.akamaiapis.net)"
+            },
+            {
+              "Name": "access_token",
+              "DisplayName": "Access Token",
+              "Type": "Secret",
+              "DependsOn": "",
+              "DefaultValue": "",
+              "Required": true,
+              "IsPAMEligible": false,
+              "Description": "The Akamai access_token for EdgeGrid authentication."
+            },
+            {
+              "Name": "client_token",
+              "DisplayName": "Client Token",
+              "Type": "Secret",
+              "DependsOn": "",
+              "DefaultValue": "",
+              "Required": true,
+              "IsPAMEligible": false,
+              "Description": "The Akamai client_token for EdgeGrid authentication."
+            },
+            {
+              "Name": "client_secret",
+              "DisplayName": "Client Secret",
+              "Type": "Secret",
+              "DependsOn": "",
+              "DefaultValue": "",
+              "Required": true,
+              "IsPAMEligible": false,
+              "Description": "The Akamai client_secret for EdgeGrid authentication."
+            },
+            {
+              "Name": "ContractId",
+              "DisplayName": "Contract ID",
+              "Type": "String",
+              "DependsOn": "",
+              "DefaultValue": "",
+              "Required": true,
+              "IsPAMEligible": false,
+              "Description": "The Akamai Contract ID (required for CCM API - all calls need contractId + groupId)"
+            },
+            {
+              "Name": "GroupId",
+              "DisplayName": "Group ID",
+              "Type": "String",
+              "DependsOn": "",
+              "DefaultValue": "",
+              "Required": true,
+              "IsPAMEligible": false,
+              "Description": "The Akamai Group ID (required for CCM API - all calls need contractId + groupId)"
+            },
+            {
+              "Name": "AccountSwitchKey",
+              "DisplayName": "Account Switch Key",
+              "Type": "String",
+              "DependsOn": "",
+              "DefaultValue": "",
+              "Required": false,
+              "IsPAMEligible": false,
+              "Description": "Optional account switch key for multi-account setups"
+            }
+          ],
+          "EntryParameters": []
+        }
+      ]
+    }
+  }
+}

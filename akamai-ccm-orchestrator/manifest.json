@@ -1,0 +1,12 @@
+{
+  "extensions": {
+    "Keyfactor.Orchestrator.Extensions.AkamaiCcmOrchestrator.Jobs.Inventory": {
+      "assemblypath": "akamai-ccm-orchestrator.dll",
+      "TypeFullName": "Keyfactor.Orchestrator.Extensions.AkamaiCcmOrchestrator.Jobs.Inventory"
+    },
+    "Keyfactor.Orchestrator.Extensions.AkamaiCcmOrchestrator.Jobs.Management": {
+      "assemblypath": "akamai-ccm-orchestrator.dll",
+      "TypeFullName": "Keyfactor.Orchestrator.Extensions.AkamaiCcmOrchestrator.Jobs.Management"
+    }
+  }
+}
