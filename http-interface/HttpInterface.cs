@@ -43,6 +43,13 @@ namespace Keyfactor.Extensions.Utilities.HttpInterface
         {
             _logger = logger;
             _host = jobProperties["host"];
+
+            // Validate host against Akamai API hostname patterns to prevent SSRF
+            if (!IsValidAkamaiHost(_host))
+            {
+                throw new ArgumentException($"Invalid Akamai API host. Must match *.luna.akamaiapis.net or *.edgegrid.net pattern.");
+            }
+
             _akamaiAuth = new AkamaiAuth(jobProperties);
 
             _httpClient = new HttpClient
@@ -50,6 +57,16 @@ namespace Keyfactor.Extensions.Utilities.HttpInterface
                 Timeout = TimeSpan.FromSeconds(DefaultTimeoutSeconds),
                 BaseAddress = new Uri($"https://{_host}")
             };
+        }
+
+        private bool IsValidAkamaiHost(string host)
+        {
+            if (string.IsNullOrWhiteSpace(host))
+                return false;
+
+            // Validate against known Akamai API hostname patterns
+            return host.EndsWith(".luna.akamaiapis.net", StringComparison.OrdinalIgnoreCase) ||
+                   host.EndsWith(".edgegrid.net", StringComparison.OrdinalIgnoreCase);
         }
 
         public async Task<T> GetAsync<T>(string path)
@@ -87,18 +104,22 @@ namespace Keyfactor.Extensions.Utilities.HttpInterface
             var authHeader = _akamaiAuth.GenerateAuthHeader(method.Method, _host, path, bodyString);
             request.Headers.Authorization = authHeader;
 
-            _logger.LogDebug($"[HTTP {method}] {path}");
+            _logger.LogDebug($"[HTTP {method}] {SanitizePath(path)}");
 
             var response = await _httpClient.SendAsync(request);
             var responseContent = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
             {
-                _logger.LogError($"[HTTP {method}] {path} failed with status {response.StatusCode}: {responseContent}");
-                throw new HttpRequestException($"HTTP {method} {path} failed with status {response.StatusCode}: {responseContent}");
+                // Log full details at trace level only to avoid exposing sensitive data in logs
+                _logger.LogTrace($"[HTTP {method}] {SanitizePath(path)} failed with status {response.StatusCode}. Response: {responseContent}");
+                _logger.LogError($"[HTTP {method}] {SanitizePath(path)} failed with status {response.StatusCode}");
+
+                // Return sanitized error message without exposing API response details
+                throw new HttpRequestException($"HTTP {method} request failed with status {response.StatusCode}");
             }
 
-            _logger.LogDebug($"[HTTP {method}] {path} succeeded with status {response.StatusCode}");
+            _logger.LogDebug($"[HTTP {method}] {SanitizePath(path)} succeeded with status {response.StatusCode}");
 
             if (typeof(T) == typeof(string))
             {
@@ -106,6 +127,17 @@ namespace Keyfactor.Extensions.Utilities.HttpInterface
             }
 
             return JsonConvert.DeserializeObject<T>(responseContent)!;
+        }
+
+        private string SanitizePath(string path)
+        {
+            // Remove sensitive query parameters from logs (accountSwitchKey, tokens, etc.)
+            if (path.Contains("?"))
+            {
+                var parts = path.Split('?');
+                return $"{parts[0]}?<query-params-redacted>";
+            }
+            return path;
         }
     }
 }

@@ -12,7 +12,7 @@
   "about": {
     "orchestrator": {
       "UOFramework": "12.3",
-      "pam_support": false,
+      "pam_support": true,
       "win": {
         "supportsCreateStore": false,
         "supportsDiscovery": false,
@@ -62,7 +62,7 @@
               "DependsOn": "",
               "DefaultValue": "",
               "Required": true,
-              "IsPAMEligible": false,
+              "IsPAMEligible": true,
               "Description": "The Akamai access_token for EdgeGrid authentication."
             },
             {
@@ -72,7 +72,7 @@
               "DependsOn": "",
               "DefaultValue": "",
               "Required": true,
-              "IsPAMEligible": false,
+              "IsPAMEligible": true,
               "Description": "The Akamai client_token for EdgeGrid authentication."
             },
             {
@@ -82,7 +82,7 @@
               "DependsOn": "",
               "DefaultValue": "",
               "Required": true,
-              "IsPAMEligible": false,
+              "IsPAMEligible": true,
               "Description": "The Akamai client_secret for EdgeGrid authentication."
             },
             {

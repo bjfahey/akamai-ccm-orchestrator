@@ -36,6 +36,13 @@ Akamai Cloud Certificate Manager (CCM) is Akamai's newer certificate management 
 - Akamai API credentials with CCM (Cloud Certificate Manager) access
 - .NET 8.0 runtime
 
+## Security Features
+
+- **Host Validation:** API host must match `*.luna.akamaiapis.net` or `*.edgegrid.net` patterns to prevent SSRF attacks
+- **PAM Support:** All credential fields (access_token, client_token, client_secret) are PAM-eligible for secure credential storage
+- **Sanitized Logging:** Query parameters and sensitive data are redacted from error messages and logs
+- **Trust Chain Validation:** Warns when certificate trust chains cannot be extracted
+
 ## Installation
 
 ### 1. Akamai Platform Configuration

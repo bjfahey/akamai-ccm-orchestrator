@@ -201,11 +201,19 @@ namespace Keyfactor.Orchestrator.Extensions.AkamaiCcmOrchestrator.Jobs
                         }
                     }
                 }
-                return sb.ToString();
+
+                var trustChain = sb.ToString();
+                if (string.IsNullOrEmpty(trustChain))
+                {
+                    _logger.LogWarning("No trust chain found in certificate contents. Certificate may be uploaded without intermediate certificates.");
+                }
+
+                return trustChain;
             }
-            catch
+            catch (Exception ex)
             {
-                // If not PKCS12, return empty chain
+                // Log warning when trust chain extraction fails
+                _logger.LogWarning($"Failed to extract trust chain from certificate contents: {ex.Message}. Uploading certificate without trust chain.");
                 return string.Empty;
             }
         }
